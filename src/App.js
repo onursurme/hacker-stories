@@ -20,11 +20,15 @@ const App = () => {
     },
   ];
 
+  const handleSearch = event => {
+    console.log(event.target.value);
+  }
+
   return (
     <div>
       <h1> My Hacker Stories </h1>
 
-      <Search />
+      <Search onSearch={handleSearch} /> {/* yani App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
       <Buu abc={stories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
@@ -32,12 +36,13 @@ const App = () => {
   );
 }
 
-const Search = () => {
+const Search = props => {
   const [searchTerm, setSearchTerm] = useState(''); // React yazmadan useState yazınca da oluyor
 
   const handleChange = event => {
     //console.log(event.target.value);
     setSearchTerm(event.target.value);
+    props.onSearch(event);
   }
 
   return (
