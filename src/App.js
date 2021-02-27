@@ -20,9 +20,23 @@ const App = () => {
     },
   ];
 
+  const [searchTerm, setSearchTerm] = useState('');
+
   const handleSearch = event => {
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
   }
+
+  const searchedStories1 = stories.filter(function (story) {
+    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+  const searchedStories2 = stories.filter(story => {
+    return story.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+  });
+  const searchedStories = stories.filter(story =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -31,25 +45,17 @@ const App = () => {
       <Search onSearch={handleSearch} /> {/* yani App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
-      <Buu abc={stories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
+      <Buu abc={searchedStories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
     </div>
   );
 }
 
 const Search = props => {
-  const [searchTerm, setSearchTerm] = useState(''); // React yazmadan useState yazınca da oluyor
-
-  const handleChange = event => {
-    //console.log(event.target.value);
-    setSearchTerm(event.target.value);
-    props.onSearch(event);
-  }
 
   return (
     <div>
-      <label htmlFor="search">Search: </label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir. JSX'te for yerine htmlFor var*/}
-      <input id="search" type="text" onChange={handleChange} />
-      <p>Searching for <strong>{searchTerm}</strong></p>
+      <label htmlFor="search">Search: </label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir ve değeri label'ın ait olacağı input tag'inin id'si olur. JSX'te for yerine htmlFor var. ör: <label for="male">Male</label> <input type="radio" name="gender" id="male"> işte bir label'ın id'sini alıp for değerini veren javascript fonksiyonu htmlFor'dur. ör: var x = document.getElementById("myLabel").htmlFor;*/}
+      <input id="search" type="text" onChange={props.onSearch} />
     </div>
   );
 }
