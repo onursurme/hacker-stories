@@ -19,7 +19,22 @@ const App = () => {
       objectID: 1,
     },
   ];
-  const [searchTerm, setSearchTerm] = useState('');
+
+  return (
+    <div>
+      <h1> My Hacker Stories </h1>
+
+      <Search />
+
+      <hr />
+      <Buu abc={stories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
+    </div>
+  );
+}
+
+const Search = () => {
+  const [searchTerm, setSearchTerm] = useState(''); // React yazmadan useState yazınca da oluyor
+
   const handleChange = event => {
     //console.log(event.target.value);
     setSearchTerm(event.target.value);
@@ -27,12 +42,9 @@ const App = () => {
 
   return (
     <div>
-      <h1> My Hacker Stories </h1>
       <label htmlFor="search">Search: </label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir. JSX'te for yerine htmlFor var*/}
       <input id="search" type="text" onChange={handleChange} />
       <p>Searching for <strong>{searchTerm}</strong></p>
-      <hr />
-      <Buu abc={stories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
     </div>
   );
 }
