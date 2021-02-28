@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const stories = [
@@ -24,8 +24,11 @@ const App = () => {
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
-    localStorage.setItem('search', event.target.value); // localStorage'ı bu şekilde yazmanın dezavantajı : programın başka bir yerinde searchTerm değiştiğinde, setSearchTerm çağrıldığında orada localStorage'ı update etmeyi unutabiliriz. Daha kolay ve garanti olanı useEffect hook'u kullanmak.
   }
+
+  useEffect(() => {
+    localStorage.setItem('search', searchTerm);
+  }, [searchTerm]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu ocmponent'in ilk render'ında ve sonra dependency array'de her değişiklik olduğunda çalışıyor. İkinci argüman olan dependency array'i yazmasak useEffect sadece ilk render'da çalışır. Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
 
   const searchedStories = stories.filter(story =>  // filter'a argüman olarak boolean return eden bir fonksiyon verilir
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
