@@ -20,15 +20,18 @@ const App = () => {
     },
   ];
 
-  const [searchTerm, setSearchTerm] = useState(localStorage.getItem('search')||'e');
+  const useSemiPersistantState = (key, initialState) => {
+    const [value, setValue] = useState(localStorage.getItem(key) || initialState); // localStorage.getItem(key) dediğimizde bu key localStorage'da varsa bu key'in karşılığı olan value dönüyor
+    useEffect(() => {
+      localStorage.setItem(key, value); // görüdüğü gibi localStorage'a key value pair'ler şeklinde kayıt yapıyoruz. locas storage browserın developer toolsunda applicationda görülebiliyor.
+    }, [key, value]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu component'in ilk render'ında ve sonra dependency array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect sadece ilk render'da çalışır. Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
+    return [value, setValue];
+  }
+   const [searchTerm, setSearchTerm] = useSemiPersistantState('search','2hhsss');
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
   }
-
-  useEffect(() => {
-    localStorage.setItem('search', searchTerm);
-  }, [searchTerm]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu ocmponent'in ilk render'ında ve sonra dependency array'de her değişiklik olduğunda çalışıyor. İkinci argüman olan dependency array'i yazmasak useEffect sadece ilk render'da çalışır. Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
 
   const searchedStories = stories.filter(story =>  // filter'a argüman olarak boolean return eden bir fonksiyon verilir
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -56,9 +59,9 @@ const Search = props => (  // aslında props yerine ({search,onSearch}) yazarsak
 
 //const Buu = ({ abc }) => abc.map(({objectID, ...item}) => <Item key={objectID} {...item}/>); 
 // Bu örnekte olduğu gibi JavaScript object destructuring, spread operator ve rest parameters kullanılabilir (üç nokta, biri assignment'ın sağında, bir solunda kullanılıyor, objenin geri kalan öğeleri gibi bir anlamı var). Bunları kullanmak kodları kısaltabilir (özellikle props'ları argüman olarak alıp verirken), ancak okunurluğu anlaşılırlığı azaltabilir ekip çalışmasında. JavaScript array destructuring ile object destructuring'i karıştırma
-const Buu = ({abc}) => abc.map(item => <Item key={item.objectID} item={item} />);
+const Buu = ({ abc }) => abc.map(item => <Item key={item.objectID} item={item} />);
 
-const Item = ({item}) => (
+const Item = ({ item }) => (
   <div>
     <span> <a href={item.url}>{item.title}</a> </span>
     <span> {item.author} </span>
