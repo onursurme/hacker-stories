@@ -41,7 +41,7 @@ const App = () => {
     <div>
       <h1> My Hacker Stories </h1>
 
-      <Search search={searchTerm} onSearch={handleSearch} /> {/* yani App diyor ki bir event olursa benim şu handlerıma haber ver */}
+      <InputWithLabel id='search' label='Search' value={searchTerm} onInputChange={handleSearch} /> {/* yani App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
       <Buu abc={searchedStories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada stories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
@@ -49,12 +49,13 @@ const App = () => {
   );
 }
 
-const Search = props => (  // aslında props yerine ({search,onSearch}) yazarsak altta props.search yerine search, props.onSearch yerine de onSearch yazabiliriz.
-  <> {/**jsx'de 1den fazla eleman return edilemiyor, birden fazla elemanı return edebilmek için div veya <></> yani fragment arasına almak gerekiyor elemanları */}
-    <label htmlFor="search">Search: </label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir ve değeri label'ın ait olacağı input tag'inin id'si olur. JSX'te for yerine htmlFor var. ör: <label for="male">Male</label> <input type="radio" name="gender" id="male"> işte bir label'ın id'sini alıp for değerini veren javascript fonksiyonu htmlFor'dur. ör: var x = document.getElementById("myLabel").htmlFor;*/}
-    <input autoFocus id="search" type="text" value={props.search} onChange={props.onSearch} /> {/**autoFocus sayesinde sayfa açılınca cursor text inputta olarak başlıyor */}
-    <p>Searched term is : {props.search}</p>
-  </>
+const InputWithLabel = ({ id, label, value, type='text', onInputChange }) => (
+  <> {/**react'ta component'ler 1den fazla eleman içeremiyor, birden fazla elemanı return edebilmek için div veya <></> yani fragment arasına almak gerekiyor elemanları */}
+    <label htmlFor={id}>{label}: </label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir ve değeri label'ın ait olacağı input tag'inin id'si olur. JSX'te for yerine htmlFor var. ör: <label for="male">Male</label> <input type="radio" name="gender" id="male"> işte bir label'ın id'sini alıp for değerini veren javascript fonksiyonu htmlFor'dur. ör: var x = document.getElementById("myLabel").htmlFor;*/}
+    &nbsp;
+    <input autoFocus id={id} type={type} value={value} onChange={onInputChange} /> {/**autoFocus sayesinde sayfa açılınca cursor text inputta olarak başlıyor */}
+    <p>Searched term is : {value}</p>
+  {/** fragment'ı kapatıyoruz */}</>
 );
 
 //const Buu = ({ abc }) => abc.map(({objectID, ...item}) => <Item key={objectID} {...item}/>); 
