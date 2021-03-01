@@ -94,9 +94,15 @@ const Buu = ({ abc, onRemoveItem }) => abc.map(item =>
 
 const Item = ({ item, onRemoveItem }) => {
 
-  // hhandleRemoveItem = handleRemoveItem2 = handleRemoveItem3
+  // alttaki handleRemoveItem fonksiyonarının hepsi aynı
   function handleRemoveItem() {
+    return onRemoveItem(item);
+  }
+  function handleRemoveItem4() {
     onRemoveItem(item);
+  }
+  const handleRemoveItem1 = function () {
+    return onRemoveItem(item);
   }
   const handleRemoveItem2 = function () {
     onRemoveItem(item);
