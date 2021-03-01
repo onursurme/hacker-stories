@@ -92,37 +92,18 @@ const Buu = ({ abc, onRemoveItem }) => abc.map(item =>
    onRemoveItem={onRemoveItem}
   />);
 
-const Item = ({ item, onRemoveItem }) => {
-
-  // alttaki handleRemoveItem fonksiyonarının hepsi aynı
-  function handleRemoveItem() {
-    return onRemoveItem(item);
-  }
-  function handleRemoveItem4() {
-    onRemoveItem(item);
-  }
-  const handleRemoveItem1 = function () {
-    return onRemoveItem(item);
-  }
-  const handleRemoveItem2 = function () {
-    onRemoveItem(item);
-  }
-  const handleRemoveItem3 = () => {
-    onRemoveItem(item);
-  };
-
-  return(
+const Item = ({ item, onRemoveItem }) => (
   <div>
     <span> <a href={item.url}>{item.title}</a> </span>
     <span> {item.author} </span>
     <span> {item.num_comments} </span>
     <span> {item.points} </span>
     <span>
-      <button type="button" onClick={handleRemoveItem}>
+      <button type="button" onClick={() => onRemoveItem(item)}> {/** burada JS'teki bind metoduyla da item onRemoveItem'a verilebilirdi. handler'ın bu şekilde JSX içinde olmasına inline handler deniyor */}
         Dismiss
       </button>
     </span>
   </div>
-)};
+)
 
 export default App;
