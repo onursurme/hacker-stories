@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const App = () => {
-  const stories = [
+  const initialStories = [
     {
       title: 'React',
       url: 'https://reactjs.org/',
@@ -27,11 +27,20 @@ const App = () => {
     }, [key, value]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu component'in ilk render'ında ve sonra dependency array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect component her render edildiğinde çalışır. Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
     return [value, setValue];
   }
-  const [searchTerm, setSearchTerm] = useSemiPersistantState('search', '2hhsss');
+  const [searchTerm, setSearchTerm] = useSemiPersistantState('search', '');
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
   }
+
+  const [stories, setStories] = useState(initialStories);
+
+  const handleRemoveStory = item => {
+    const newStories = stories.filter(
+      story => item.objectID !== story.objectID
+    );
+    setStories(newStories);
+  };
 
   // filter'a argüman olarak boolean return eden bir fonksiyon verilir
   const searchedStories = stories.filter(story =>
@@ -53,7 +62,7 @@ const App = () => {
       </InputWithLabel> {/* App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
-      <Buu abc={searchedStories} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
+      <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
     </div>
   );
 }
@@ -76,15 +85,38 @@ const InputWithLabel = ({
 
 //const Buu = ({ abc }) => abc.map(({objectID, ...item}) => <Item key={objectID} {...item}/>); 
 // Bu örnekte olduğu gibi JavaScript object destructuring, spread operator ve rest parameters kullanılabilir (üç nokta, biri assignment'ın sağında, bir solunda kullanılıyor, objenin geri kalan öğeleri gibi bir anlamı var). Bunları kullanmak kodları kısaltabilir (özellikle props'ları argüman olarak alıp verirken), ancak okunurluğu anlaşılırlığı azaltabilir ekip çalışmasında. JavaScript array destructuring ile object destructuring'i karıştırma
-const Buu = ({ abc }) => abc.map(item => <Item key={item.objectID} item={item} />);
+const Buu = ({ abc, onRemoveItem }) => abc.map(item => 
+  <Item
+   key={item.objectID}
+   item={item}
+   onRemoveItem={onRemoveItem}
+  />);
 
-const Item = ({ item }) => (
+const Item = ({ item, onRemoveItem }) => {
+
+  // hhandleRemoveItem = handleRemoveItem2 = handleRemoveItem3
+  function handleRemoveItem() {
+    onRemoveItem(item);
+  }
+  const handleRemoveItem2 = function () {
+    onRemoveItem(item);
+  }
+  const handleRemoveItem3 = () => {
+    onRemoveItem(item);
+  };
+
+  return(
   <div>
     <span> <a href={item.url}>{item.title}</a> </span>
     <span> {item.author} </span>
     <span> {item.num_comments} </span>
     <span> {item.points} </span>
+    <span>
+      <button type="button" onClick={handleRemoveItem}>
+        Dismiss
+      </button>
+    </span>
   </div>
-);
+)};
 
 export default App;
