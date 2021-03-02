@@ -53,10 +53,13 @@ const App = () => {
     )
 
   const [stories, setStories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     getAsyncStories().then(result => {
       setStories(result.data.stories);
+      setIsLoading(false);
     });
   }, [])
 
@@ -87,7 +90,8 @@ const App = () => {
       </InputWithLabel> {/* App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
-      <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> {/*Buu diye bir component türü tanımladım, bu türde bir
+      {isLoading ? (<p>Loading ...</p>) : (
+      <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> )} {/*Buu diye bir component türü tanımladım, bu türde bir
       // component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer
       // olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props
       // ile değişken geçirmiş oluyoruz.*/}
