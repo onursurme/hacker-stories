@@ -21,19 +21,44 @@ const App = () => {
   ];
 
   const useSemiPersistantState = (key, initialState) => {
-    const [value, setValue] = useState(localStorage.getItem(key) || initialState); // localStorage.getItem(key) dediğimizde bu key localStorage'da varsa bu key'in karşılığı olan value dönüyor
+    const [value, setValue] = useState(localStorage.getItem(key) || initialState); // localStorage.getItem(key) dediğimizde
+    // bu key localStorage'da varsa bu key'in karşılığı olan value dönüyor
     useEffect(() => {
-      localStorage.setItem(key, value); // görüdüğü gibi localStorage'a key value pair'ler şeklinde kayıt yapıyoruz. local storage browserın developer toolsunda applicationda görülebiliyor.
-    }, [key, value]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu component'in ilk render'ında ve sonra dependency array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect component her render edildiğinde çalışır. Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
+      localStorage.setItem(key, value); // görüdüğü gibi localStorage'a key value pair'ler şeklinde kayıt yapıyoruz.
+      // local storage browserın developer toolsunda application sekmesind görülebiliyor.
+    }, [key, value]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu component'in
+    // ilk render'ında ve sonra dependency array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya
+    // value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect component her render edildiğinde çalışır.
+    // Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
     return [value, setValue];
   }
+
   const [searchTerm, setSearchTerm] = useSemiPersistantState('search', '');
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
   }
 
-  const [stories, setStories] = useState(initialStories);
+  //const getAsyncStories = () => Promise.resolve({data: {stories: initialStories}});
+/*   const getAsyncStories = () =>
+    new Promise(resolve =>
+      resolve({ data: { stories: initialStories } })
+    ) */
+  const getAsyncStories = () =>
+    new Promise(resolve =>
+      setTimeout(
+        () => resolve({ data: { stories: initialStories } }),
+        2000
+      )
+    )
+
+  const [stories, setStories] = useState([]);
+
+  useEffect(() => {
+    getAsyncStories().then(result => {
+      setStories(result.data.stories);
+    });
+  }, [])
 
   const handleRemoveStory = item => {
     const newStories = stories.filter(
@@ -57,12 +82,15 @@ const App = () => {
         value={searchTerm}
         isFocused
         onInputChange={handleSearch}
-      > 
+      >
         <strong>Search :</strong>
       </InputWithLabel> {/* App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
-      <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> {/*Buu diye bir component türü tanımladım, bu türde bir component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props ile değişken geçirmiş oluyoruz.*/}
+      <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> {/*Buu diye bir component türü tanımladım, bu türde bir
+      // component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer
+      // olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props
+      // ile değişken geçirmiş oluyoruz.*/}
     </div>
   );
 }
@@ -75,21 +103,29 @@ const InputWithLabel = ({
   onInputChange,
   children
 }) => (
-  <> {/**react'ta component'ler 1den fazla eleman içeremiyor, birden fazla elemanı return edebilmek için div veya <></> yani fragment gibi bir etiket arasına alarak tek eleman haline getirmek gerekiyor */}
-    <label htmlFor={id}>{children}</label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir ve değeri label'ın ait olacağı input tag'inin id'si olur. JSX'te for yerine htmlFor var. ör: <label for="male">Male</label> <input type="radio" name="gender" id="male"> işte bir label'ın id'sini alıp for değerini veren javascript fonksiyonu htmlFor'dur. ör: var x = document.getElementById("myLabel").htmlFor;*/}
+  <> {/**react'ta component'ler 1den fazla eleman içeremiyor, birden fazla elemanı return edebilmek için div veya <></> yani
+   *  fragment gibi bir etiket arasına alarak tek eleman haline getirmek gerekiyor */}
+    <label htmlFor={id}>{children}</label> {/*normalde bir label'la bir inputun eşleşmesi için label'a for attribute'ü verilir
+     ve değeri label'ın ait olacağı input tag'inin id'si olur. JSX'te for yerine htmlFor var. ör: <label for="male">Male</label>
+      <input type="radio" name="gender" id="male"> işte bir label'ın id'sini alıp for değerini veren javascript fonksiyonu
+       htmlFor'dur. ör: var x = document.getElementById("myLabel").htmlFor;*/}
     &nbsp;
-    <input id={id} type={type} value={value} autoFocus={isFocused} onChange={onInputChange} /> {/**autoFocus sayesinde sayfa açılınca cursor text inputta olarak başlıyor */}
+    <input id={id} type={type} value={value} autoFocus={isFocused} onChange={onInputChange} /> {/**autoFocus sayesinde sayfa açılınca
+     *  cursor text inputta olarak başlıyor */}
     <p>Searched term is : {value}</p>
     {/** fragment'ı kapatıyoruz */}</>
 );
 
 //const Buu = ({ abc }) => abc.map(({objectID, ...item}) => <Item key={objectID} {...item}/>); 
-// Bu örnekte olduğu gibi JavaScript object destructuring, spread operator ve rest parameters kullanılabilir (üç nokta, biri assignment'ın sağında, bir solunda kullanılıyor, objenin geri kalan öğeleri gibi bir anlamı var). Bunları kullanmak kodları kısaltabilir (özellikle props'ları argüman olarak alıp verirken), ancak okunurluğu anlaşılırlığı azaltabilir ekip çalışmasında. JavaScript array destructuring ile object destructuring'i karıştırma
-const Buu = ({ abc, onRemoveItem }) => abc.map(item => 
+// Bu örnekte olduğu gibi JavaScript object destructuring, spread operator ve rest parameters kullanılabilir (üç nokta, biri
+// assignment'ın sağında, bir solunda kullanılıyor, objenin geri kalan öğeleri gibi bir anlamı var). Bunları kullanmak kodları
+// kısaltabilir (özellikle props'ları argüman olarak alıp verirken), ancak okunurluğu anlaşılırlığı azaltabilir ekip çalışmasında.
+// JavaScript array destructuring ile object destructuring'i karıştırma
+const Buu = ({ abc, onRemoveItem }) => abc.map(item =>
   <Item
-   key={item.objectID}
-   item={item}
-   onRemoveItem={onRemoveItem}
+    key={item.objectID}
+    item={item}
+    onRemoveItem={onRemoveItem}
   />);
 
 const Item = ({ item, onRemoveItem }) => (
@@ -99,7 +135,8 @@ const Item = ({ item, onRemoveItem }) => (
     <span> {item.num_comments} </span>
     <span> {item.points} </span>
     <span>
-      <button type="button" onClick={() => onRemoveItem(item)}> {/** burada JS'teki bind metoduyla da item onRemoveItem'a verilebilirdi. handler'ın bu şekilde JSX içinde olmasına inline handler deniyor */}
+      <button type="button" onClick={() => onRemoveItem(item)}> {/** burada JS'teki bind metoduyla da item onRemoveItem'a verilebilirdi.
+       *  handler'ın bu şekilde JSX içinde olmasına inline handler deniyor */}
         Dismiss
       </button>
     </span>
