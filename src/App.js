@@ -26,9 +26,11 @@ const App = () => {
     useEffect(() => {
       localStorage.setItem(key, value); // görüdüğü gibi localStorage'a key value pair'ler şeklinde kayıt yapıyoruz.
       // local storage browserın developer toolsunda application sekmesind görülebiliyor.
-    }, [key, value]); // burada ikinci array optional ve bu array'e dependency array deniyor. useEffect fonksiyonu component'in
-    // ilk render'ında ve sonra dependency array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya
-    // value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect component her render edildiğinde çalışır.
+    }, [key, value]); // useEffect'in 2. argümanı olan array optional ve bu array'e dependency
+    // array deniyor. useEffect fonksiyonu component'in ilk render'ında ve dependency
+    // array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya
+    // value değişirse çalışıyor). İkinci argüman olan dependency array'i yazmasak useEffect
+    // component her render edildiğinde çalışır.
     // Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
     return [value, setValue];
   }
@@ -54,13 +56,12 @@ const App = () => {
 
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
-    getAsyncStories().then(result => {
-      setStories(result.data.stories);
-      setIsLoading(false);
-    });
+    getAsyncStories().then(result => { setStories(result.data.stories); setIsLoading(false); })
+    .catch(() => setIsError(true)); // promise'ler promise return ettikleri için chain edilebilirler
   }, [])
 
   const handleRemoveStory = item => {
@@ -73,6 +74,7 @@ const App = () => {
   // filter'a argüman olarak boolean return eden bir fonksiyon verilir
   const searchedStories = stories.filter(story =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
+    || story.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -90,6 +92,8 @@ const App = () => {
       </InputWithLabel> {/* App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
+      {isError && <p>Something went wrong ...</p>}{/** isError true olunca hem something went wrong
+       * yazar, hem de alttakileri de render eder */}
       {isLoading ? (<p>Loading ...</p>) : (
       <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> )} {/*Buu diye bir component türü tanımladım, bu türde bir
       // component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer
