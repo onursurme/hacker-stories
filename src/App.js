@@ -54,13 +54,12 @@ const App = () => {
 
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
-    getAsyncStories().then(result => {
-      setStories(result.data.stories);
-      setIsLoading(false);
-    });
+    getAsyncStories().then(result => { setStories(result.data.stories); setIsLoading(false); })
+    .catch(() => setIsError(true)); // promise'ler promise return ettikleri için chain edilebilirler
   }, [])
 
   const handleRemoveStory = item => {
@@ -90,6 +89,8 @@ const App = () => {
       </InputWithLabel> {/* App diyor ki bir event olursa benim şu handlerıma haber ver */}
 
       <hr />
+      {isError && <p>Something went wrong ...</p>}{/** isError true olunca hem something went wrong
+       * yazar, hem de alttakileri de render eder */}
       {isLoading ? (<p>Loading ...</p>) : (
       <Buu abc={searchedStories} onRemoveItem={handleRemoveStory} /> )} {/*Buu diye bir component türü tanımladım, bu türde bir
       // component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer
