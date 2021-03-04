@@ -20,6 +20,10 @@ const App = () => {
     },
   ];
 
+  const [counter,incrementCounter] = useState(1);
+  const inc = () => {incrementCounter(counter+1)};
+  const res = () => {incrementCounter(1)};
+  
   const useSemiPersistantState = (key, initialState) => {
     const [value, setValue] = useState(localStorage.getItem(key) || initialState); // localStorage.getItem(key) dediğimizde
     // bu key localStorage'da varsa bu key'in karşılığı olan value dönüyor
@@ -99,6 +103,9 @@ const App = () => {
       // component oluşturuyorum ve abc diye bir custom HTML attribute'ü oluşturuyorum, ve datamı bu attribute'e JSX ile değer
       // olarak atıyorum. Burada searchedStories props oluyor (properties demek), yani App componentinden Buu componentine props
       // ile değişken geçirmiş oluyoruz.*/}
+      <p>{counter}</p>
+      <button type="button" onClick={inc}>inc</button>
+      <button type="button" onClick={res}>reset</button>
     </div>
   );
 }
