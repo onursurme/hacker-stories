@@ -1,3 +1,14 @@
+/**
+ * Annova Özel Eğitim Kurumları ERP yazılımı
+ * 
+ * Copyright (c) Annova Software 2021
+ * 
+ * File:      App.js
+ * 
+ * Contents:  React eğitimi amaçlı deneme programı
+ * 
+ * History:   08.03.2021, drx
+ */
 import { useEffect, useState } from "react";
 
 const App = () => {
@@ -29,7 +40,7 @@ const App = () => {
     // bu key localStorage'da varsa bu key'in karşılığı olan value dönüyor
     useEffect(() => {
       localStorage.setItem(key, value); // görüdüğü gibi localStorage'a key value pair'ler şeklinde kayıt yapıyoruz.
-      // local storage browserın developer toolsunda application sekmesind görülebiliyor.
+      // local storage browserın developer toolsunda application sekmesinde görülebiliyor.
     }, [key, value]); // useEffect'in 2. argümanı olan array optional ve bu array'e dependency
     // array deniyor. useEffect fonksiyonu component'in ilk render'ında ve dependency
     // array'deki değişkenlerin birinde değişiklik olduğunda çalışıyor (burada key veya
@@ -37,13 +48,13 @@ const App = () => {
     // component her render edildiğinde çalışır.
     // Boş bir array yazarsak sadece component'in ilk render'ında çalışır.
     return [value, setValue];
-  }
+  };
 
   const [searchTerm, setSearchTerm] = useSemiPersistantState('search', '');
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
-  }
+  };
 
   //const getAsyncStories = () => Promise.resolve({data: {stories: initialStories}});
 /*   const getAsyncStories = () =>
@@ -56,7 +67,7 @@ const App = () => {
         () => resolve({ data: { stories: initialStories } }),
         2000
       )
-    )
+    );
 
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +77,7 @@ const App = () => {
     setIsLoading(true);
     getAsyncStories().then(result => { setStories(result.data.stories); setIsLoading(false); })
     .catch(() => setIsError(true)); // promise'ler promise return ettikleri için chain edilebilirler
-  }, [])
+  }, []);
 
   const handleRemoveStory = item => {
     const newStories = stories.filter(
@@ -108,7 +119,7 @@ const App = () => {
       <button type="button" onClick={res}>reset</button>
     </div>
   );
-}
+};
 
 const InputWithLabel = ({
   id,
@@ -156,6 +167,6 @@ const Item = ({ item, onRemoveItem }) => (
       </button>
     </span>
   </div>
-)
+);
 
 export default App;
