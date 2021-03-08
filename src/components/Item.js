@@ -5,7 +5,7 @@ const Item = ({ item, onRemoveItem }) => (
       <span>
         <button type="button" onClick={() => onRemoveItem(item)}> {/** burada JS'teki bind metoduyla da item onRemoveItem'a verilebilirdi.
          *  handler'ın bu şekilde JSX içinde olmasına inline handler deniyor */}
-          Dismiss
+          Listeden sil
         </button>
       </span>
     </div>

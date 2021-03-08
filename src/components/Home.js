@@ -25,7 +25,7 @@ const Home = () => {
     },
     {
       title: 'LOGO, SQL',
-      url: 'https://doc.logo.com.tr/',
+      url: 'https://docs.logo.com.tr/',
       author: 'Süleyman Özgü ŞENER',
       num_comments: 2,
       points: 5,

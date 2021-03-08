@@ -15,7 +15,7 @@ const InputWithLabel = ({
     &nbsp;
     <input id={id} type={type} value={value} autoFocus={isFocused} onChange={onInputChange} /> {/**autoFocus sayesinde sayfa açılınca
      *  cursor text inputta olarak başlıyor */}
-    <p>Searched term is : {value}</p>
+    <p>Aranılan text : {value}</p>
     {/** fragment'ı kapatıyoruz */}</>
 );
 
