@@ -75,10 +75,9 @@ const Home = () => {
     new Promise(resolve =>
       setTimeout(
         () => resolve({ data: { stories: initialStories } }),
-        2000
-      )
-    );
-
+        2000)
+    ); 
+ 
   const [stories, setStories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -100,6 +99,22 @@ const Home = () => {
   const searchedStories = stories.filter(story =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
     || story.author.toLowerCase().includes(searchTerm.toLowerCase())
+
+    || story.title.replace(/I/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/I/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/İ/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/İ/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/ı/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/i/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.title.replace(/i/g,"İ").toLowerCase().includes(searchTerm.toLowerCase()) 
+
+    || story.author.replace(/I/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/I/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/İ/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/İ/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/ı/g,"i").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/i/g,"ı").toLowerCase().includes(searchTerm.toLowerCase()) 
+    || story.author.replace(/i/g,"İ").toLowerCase().includes(searchTerm.toLowerCase()) 
   );
 
   return (
